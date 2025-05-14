@@ -1,6 +1,6 @@
 package com.security.playground.service;
 
-import com.security.playground.model.Users;
+import com.security.playground.model.MyUser;
 import com.security.playground.repo.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -23,9 +23,9 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Users> users = usersRepository.findByUsername(username);
+        Optional<MyUser> users = usersRepository.findByUsername(username);
         if (users.isPresent()) {
-            Users user = users.get();
+            MyUser user = users.get();
             return User.builder()
                     .username(user.getUsername())
                     .password(user.getPassword())

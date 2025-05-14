@@ -1,7 +1,6 @@
 package com.security.playground.config;
 
 import com.security.playground.service.MyUserDetailsService;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,11 +27,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authorize -> {
             authorize.requestMatchers("/admin/**").hasRole("ADMIN");
-            authorize.requestMatchers("/user/**").hasRole("USER");
+            authorize.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN");
+            authorize.requestMatchers("/h2-console/**").permitAll();
             authorize.anyRequest().authenticated();
         })
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(Customizer.withDefaults()).disable())
                 .build();
     }
 
@@ -46,6 +47,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(12);
     }
 }
