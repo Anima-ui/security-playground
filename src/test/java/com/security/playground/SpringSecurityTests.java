@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.annotation.Commit;
@@ -65,5 +66,12 @@ public class SpringSecurityTests {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/admin/get"))
                 .andExpect(status().isForbidden());
+    }
+
+    @WithAnonymousUser
+    @Test
+    void testAnonymousUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/get"))
+                .andExpect(status().isUnauthorized());
     }
 }
